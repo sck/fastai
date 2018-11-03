@@ -234,6 +234,13 @@ class LearnerCallback(Callback):
     @property
     def cb_name(self): return camel2snake(self.__class__.__name__)
 
+
+def ScientificNotationFormatter(x,lim):
+    if x == 0:
+        return '0'
+    return '{0}e{1}'.format(int(x/10**np.floor(np.log10(x))),int(np.log10(x)))
+
+
 class Recorder(LearnerCallback):
     "A `LearnerCallback` that records epoch, loss, opt and metric data during training."
     _order=-10
@@ -306,6 +313,7 @@ class Recorder(LearnerCallback):
         ax.set_ylabel("Loss")
         ax.set_xlabel("Learning Rate")
         ax.set_xscale('log')
+        ax.xaxis.set_major_formatter(plt.FuncFormatter(ScientificNotationFormatter))
 
     def plot_losses(self)->None:
         "Plot training and validation losses."
